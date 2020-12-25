@@ -280,6 +280,7 @@ class Playstore(object):
         download_obb: bool = False,
         download_split_apks: bool = False,
         show_progress_bar: bool = False,
+        version_code: str = None
     ) -> Iterable[int]:
         """
         Internal method to download a certain app (identified by the package name) from
@@ -336,8 +337,8 @@ class Playstore(object):
                 "Can't proceed with the download: there was an error when "
                 f"requesting details for app '{package_name}'"
             )
-
-        version_code = details.docV2.details.appDetails.versionCode
+        if not version_code:
+            version_code = details.docV2.details.appDetails.versionCode
         offer_type = details.docV2.offer[0].offerType
 
         # Check if the app was already downloaded by this account.
@@ -697,6 +698,7 @@ class Playstore(object):
         download_obb: bool = False,
         download_split_apks: bool = False,
         show_progress_bar: bool = True,
+        version_code: str = None
     ) -> bool:
         """
         Download a certain app (identified by the package name) from the
@@ -723,6 +725,7 @@ class Playstore(object):
                     download_obb,
                     download_split_apks,
                     show_progress_bar,
+                    version_code
                 )
             )
         except Exception as e:

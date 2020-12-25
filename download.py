@@ -78,6 +78,13 @@ def get_cmd_args(args: list = None):
         metavar="TAG",
         help='An optional tag prepended to the file name, e.g., "[TAG] filename.apk"',
     )
+    parser.add_argument(
+        "-v",
+        "--version",
+        type=str,
+        metavar="VERSION",
+        help='APK version will be downloaded"',
+    )
     return parser.parse_args(args)
 
 
@@ -107,6 +114,10 @@ def main():
             "title": app.title,
             "creator": app.creator,
         }
+        if not args.version:
+            version_code = app.details.appDetails.versionCode
+        else:
+            version_code = args.version
 
         if args.out.strip(" '\"") == downloaded_apk_default_location:
             # The downloaded apk will be saved in the Downloads folder (created in the
@@ -116,8 +127,7 @@ def main():
                 re.sub(
                     r"[^\w\-_.\s]",
                     "_",
-                    f"{details['title']} by {details['creator']} - "
-                    f"{details['package_name']}.apk",
+                    f"{details['package_name']}_{version_code}.apk",
                 ),
             )
         else:
@@ -143,6 +153,7 @@ def main():
             downloaded_apk_file_path,
             download_obb=True if args.blobs else False,
             download_split_apks=True if args.split_apks else False,
+            version_code=args.version
         )
 
         if not success:
